@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.API", "Movies.API\Movies.API.csproj", "{8516CF5F-EC5F-4B23-B00F-63F7CDEB86FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movies.API", "Movies.API\Movies.API.csproj", "{8516CF5F-EC5F-4B23-B00F-63F7CDEB86FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Domain", "Movies.Domain\Movies.Domain.csproj", "{2CFD8CCC-767B-4FCE-98B0-0C40B1DE7277}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movies.Domain", "Movies.Domain\Movies.Domain.csproj", "{2CFD8CCC-767B-4FCE-98B0-0C40B1DE7277}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Application", "Movies.Application\Movies.Application.csproj", "{8A8E681B-F464-4E9B-82B1-DE6A0E376031}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movies.Application", "Movies.Application\Movies.Application.csproj", "{8A8E681B-F464-4E9B-82B1-DE6A0E376031}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Infrastructure", "Movies.Infrastructure\Movies.Infrastructure.csproj", "{B1F7538A-435B-42AB-81CE-BEBCBB74C000}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Persistence", "Movies.Persistence\Movies.Persistence.csproj", "{BD060819-FD49-42B9-BD32-E6589295499B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movies.Infrastructure", "Movies.Infrastructure\Movies.Infrastructure.csproj", "{B1F7538A-435B-42AB-81CE-BEBCBB74C000}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{B1F7538A-435B-42AB-81CE-BEBCBB74C000}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1F7538A-435B-42AB-81CE-BEBCBB74C000}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1F7538A-435B-42AB-81CE-BEBCBB74C000}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD060819-FD49-42B9-BD32-E6589295499B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD060819-FD49-42B9-BD32-E6589295499B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD060819-FD49-42B9-BD32-E6589295499B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD060819-FD49-42B9-BD32-E6589295499B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

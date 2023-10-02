@@ -1,11 +1,18 @@
+using MediatR;
 using Microsoft.OpenApi.Models;
+using Movies.Application.Queries;
+using Movies.Infrastructure.ApiClient;
+using Movies.Infrastructure.Settings;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-var apiOptions = new ApiOptions();
-builder.Configuration.GetSection("ApiOptions").Bind(apiOptions);
+var apiOptions = new ApiSettings();
+builder.Configuration.GetSection("ApiSettings").Bind(apiOptions);
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection(ApiSettings.KeyName));
 
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSingleton<ITmdbApiClient, TmdbApiClient>();
 
 builder.Services.AddHttpClient(apiOptions.Name,opt =>
 {
@@ -31,10 +38,11 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/movies/{expression}", async (string expression, IHttpClientFactory httpClientFactory) =>
+app.MapGet("/movies/{expression}", async (string expression, IMediator mediator) =>
 {
-    var client = httpClientFactory.CreateClient("TMDB");
-    var mov = await client.GetFromJsonAsync<Objectus>($"?query={expression}");
+    var query = new GetMoviesQuery(expression);
+    var result = await mediator.Send(query);
+    return Results.Ok(result);
 });
 
 
@@ -46,12 +54,6 @@ app.MapPost("/user/{userId:int}/watchlist", async () =>
 
 app.Run();
 
-public class ApiOptions
-{
-    public string Name { get; set; }
-    public string ApiKey { get; set; }
-    public string BaseUrl { get; set; }
-}
 
 public class Objectus
 {
