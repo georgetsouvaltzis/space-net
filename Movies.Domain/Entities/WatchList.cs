@@ -2,6 +2,9 @@
 {
     public class WatchList : BaseEntity
     {
-        public bool IsWatched { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
+        
+        public ICollection<Movie> Movies { get; set; }
     }
 }

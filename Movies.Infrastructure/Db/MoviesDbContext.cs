@@ -16,12 +16,11 @@ namespace Movies.Infrastructure.Db
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasData(new User
-            {
-                Id = 1,
-                FirstName = "George",
-                LastName = "Tsouvaltzis",
-            });
+            modelBuilder.Entity<User>()
+                .HasOne(x => x.WatchList)
+                .WithOne(x => x.User)
+                .HasForeignKey<WatchList>(x => x.UserId);
+                
             base.OnModelCreating(modelBuilder);
         }
     }

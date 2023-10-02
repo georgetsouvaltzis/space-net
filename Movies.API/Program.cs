@@ -1,18 +1,29 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Movies.API.Requests;
+using Movies.Application.Commands;
+using Movies.Application.Handlers;
 using Movies.Application.Queries;
+using Movies.Domain.Repositories;
 using Movies.Infrastructure.ApiClient;
+using Movies.Infrastructure.Db;
+using Movies.Infrastructure.Handlers.Queries;
+using Movies.Infrastructure.Repositories;
+using Movies.Infrastructure.Seeder;
 using Movies.Infrastructure.Settings;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var apiOptions = new ApiSettings();
 builder.Configuration.GetSection("ApiSettings").Bind(apiOptions);
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection(ApiSettings.KeyName));
 
+builder.Services.AddDbContext<MoviesDbContext>(opt => opt.UseInMemoryDatabase("MoviesDb"));
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddMediatR(typeof(AddMovieToUserWatchlistCommandHandler).Assembly, typeof(GetMoviesQueryHandler).Assembly);
 builder.Services.AddSingleton<ITmdbApiClient, TmdbApiClient>();
+builder.Services.AddScoped<IMoviesRepository, MoviesRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddHttpClient(apiOptions.Name,opt =>
 {
@@ -34,6 +45,7 @@ builder.Services.AddSwaggerGen(opt =>
 
 
 var app = builder.Build();
+await DatabaseInitializer.InitializeAsync(app.Services);
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -46,23 +58,35 @@ app.MapGet("/movies/{expression}", async (string expression, IMediator mediator)
 });
 
 
-// Add movie to the watchlist
-app.MapPost("/user/{userId:int}/watchlist", async () =>
+app.MapPost("/user/{userId:int}/watchlist", async (int userId, AddMovieToUserWatchlistRequest request, IMediator mediator) =>
 {
+    var command = new AddMovieToUserWatchlistCommand
+    {
+        UserId = userId,
+        MovieId = request.MovieId
+    };
 
+    var result = await mediator.Send(command);
+    return Results.Ok();
 });
 
+app.MapGet("/user/{userId:int}/watchlist", async (int userId, IMediator mediator) =>
+{
+    var command = new GetUserWatchlistMoviesQuery
+    {
+        UserId = userId,
+    };
+});
+
+app.MapPut("/user/{userId:int}/watchlist", async (int userId, UpdateMovieWatchedRequest request, IMediator mediator) =>
+{
+    var command = new UpdateMovieWatchedCommand
+    {
+        UserId = userId,
+        MovieId = request.MovieId
+    };
+    var result = await mediator.Send(command);
+    return Results.Ok();
+    
+});
 app.Run();
-
-
-public class Objectus
-{
-    [JsonPropertyName("results")]
-    public List<Mov> Movies { get; set; }
-}
-public class Mov
-{
-    public int Id { get; set; }
-    public string? Title { get; set; }
-    public string? Overview { get; set; }
-}
