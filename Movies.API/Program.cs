@@ -22,7 +22,6 @@ app.MapGet("/movies/{expression}", async (string expression, IMediator mediator)
     return Results.Ok(result);
 });
 
-
 app.MapPost("/user/{userId:int}/watchlist", async (int userId, AddMovieToUserWatchlistRequest request, IMediator mediator) =>
 {
     var command = new AddMovieToUserWatchlistCommand(userId, request.MovieId);

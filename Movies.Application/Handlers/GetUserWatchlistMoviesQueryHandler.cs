@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Movies.Application.Queries;
 using Movies.Application.Results;
 using Movies.Domain.Repositories;
@@ -8,6 +9,7 @@ namespace Movies.Application.Handlers;
 public class GetUserWatchlistMoviesQueryHandler : IRequestHandler<GetUserWatchlistMoviesQuery, IEnumerable<WatchlistMovieResult>>
 {
     private readonly IUserRepository _userRepository;
+
     public GetUserWatchlistMoviesQueryHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;

@@ -2,26 +2,29 @@
 using Movies.Domain.Entities;
 using Movies.Infrastructure.Db;
 
-namespace Movies.Infrastructure.Seeder
+namespace Movies.Infrastructure.Seeder;
+
+public static class DatabaseInitializer
 {
-    public static class DatabaseInitializer
+    public static async Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        public static async Task InitializeAsync(IServiceProvider serviceProvider)
+        using var scope = serviceProvider.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<MoviesDbContext>();
+
+        if (!db.Database.EnsureCreated()) return;
+
+        await db.Users.AddAsync(new User
         {
-            using var scope = serviceProvider.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<MoviesDbContext>();
-
-            if (!db.Database.EnsureCreated()) return;
-
-            await db.Users.AddAsync(new User
+            Id = 1,
+            FirstName = "George",
+            LastName = "Tsouvaltzis",
+            WatchList = new()
             {
-                Id = 1,
-                FirstName = "George",
-                LastName = "Tsouvaltzis",
-                WatchList = new()
-            });
+               Id = 1,
+               Movies = new List<Movie>(),
+            },
+        });
 
-            await db.SaveChangesAsync();
-        }
+        await db.SaveChangesAsync();
     }
 }

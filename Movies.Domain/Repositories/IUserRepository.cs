@@ -9,4 +9,6 @@ public interface IUserRepository
     Task<IEnumerable<Movie>> GetWatchlistMoviesAsync(int userId);
 
     Task UpdateWatchlistMovieToWatched(int userid, int movieId);
+
+    Task<User> GetUserAsync(int userId);
 }

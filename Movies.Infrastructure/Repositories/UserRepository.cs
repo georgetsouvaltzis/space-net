@@ -13,9 +13,13 @@ namespace Movies.Infrastructure.Repositories
             _dbContext = moviesDbContext;
         }
 
+        public async Task<User> GetUserAsync(int userId)
+        {
+            return await _dbContext.Users.Include(x => x.WatchList).FirstAsync(x => x.Id == userId);
+        }
+
         public async Task AddToWatchlistAsync(int userId, int movieId)
         {
-            
             var user = await _dbContext
                 .Users
                 .Include(x => x.WatchList)

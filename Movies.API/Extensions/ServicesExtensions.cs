@@ -24,6 +24,7 @@ namespace Movies.API.Extensions
             serviceCollection.AddSingleton<ITmdbApiClient, TmdbApiClient>();
             serviceCollection.AddScoped<IMoviesRepository, MoviesRepository>();
             serviceCollection.AddScoped<IUserRepository, UserRepository>();
+            serviceCollection.AddScoped<IWatchListRepository, WatchListRepository>();
             serviceCollection.AddHttpClient(apiOptions.Name, opt =>
                         {
                             opt.BaseAddress = new Uri(apiOptions.BaseUrl);
