@@ -6,14 +6,17 @@ namespace Movies.Application.Handlers;
 
 public class UpdateMovieWatchedCommandHandler : IRequestHandler<UpdateMovieWatchedCommand>
 {
-    private readonly IUserRepository _userRepository;
-    public UpdateMovieWatchedCommandHandler(IUserRepository userRepository)
+    private readonly IMoviesRepository _moviesRepository;
+    public UpdateMovieWatchedCommandHandler(IMoviesRepository moviesRepository)
     {
-        _userRepository = userRepository;
+        _moviesRepository = moviesRepository;
     }
     public async Task<Unit> Handle(UpdateMovieWatchedCommand request, CancellationToken cancellationToken)
     {
-        await _userRepository.UpdateWatchlistMovieToWatched(request.UserId, request.MovieId);
+        var existingMovie = await _moviesRepository.GetAsync(request.MovieId);
+
+        existingMovie.IsWatched = true;
+        await _moviesRepository.UpdateAsync(existingMovie);
 
         return Unit.Value;
     }

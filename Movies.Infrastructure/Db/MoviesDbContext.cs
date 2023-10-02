@@ -22,6 +22,12 @@ public class MoviesDbContext : DbContext
             .HasOne(x => x.WatchList)
             .WithOne(x => x.User)
             .HasForeignKey<WatchList>(x => x.UserId);
+
+        modelBuilder.Entity<Movie>()
+            .HasOne(x => x.WatchList)
+            .WithMany(x => x.Movies)
+            .HasForeignKey(x => x.WatchListId);
+            
             
         base.OnModelCreating(modelBuilder);
     }

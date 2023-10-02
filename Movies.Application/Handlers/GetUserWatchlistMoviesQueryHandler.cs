@@ -16,6 +16,7 @@ public class GetUserWatchlistMoviesQueryHandler : IRequestHandler<GetUserWatchli
     }
     public async Task<IEnumerable<WatchlistMovieResult>> Handle(GetUserWatchlistMoviesQuery request, CancellationToken cancellationToken)
     {
+        var existingUser = await _userRepository.GetUserAsync(request.UserId);
         var result = await _userRepository.GetWatchlistMoviesAsync(request.UserId);
 
         return result.Select(x => new WatchlistMovieResult(x.Id, x.Overview, x.Title, x.IsWatched));

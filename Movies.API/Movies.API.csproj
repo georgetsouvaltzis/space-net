@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Movies.Infrastructure\Movies.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Validators\" />
+  </ItemGroup>
+
 </Project>
