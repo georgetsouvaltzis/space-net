@@ -1,14 +1,19 @@
-using IMDbApiLib;
 using Microsoft.OpenApi.Models;
-using System.Net.Http;
-using System.Reflection;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+var apiOptions = new ApiOptions();
+builder.Configuration.GetSection("ApiOptions").Bind(apiOptions);
 
-var asdf = builder.Configuration["ApiKey"];
-var url = builder.Configuration["BaseUrl"];
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient(apiOptions.Name,opt =>
+{
+    opt.BaseAddress = new Uri(apiOptions.BaseUrl);
+    opt.DefaultRequestHeaders.Clear();
+    opt.DefaultRequestHeaders.Add("Accept", "application/json");
+    opt.DefaultRequestHeaders.Add("Authorization", apiOptions.ApiKey);
+});
 builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo
@@ -17,8 +22,6 @@ builder.Services.AddSwaggerGen(opt =>
         Version = "V1",
         Description = "Simple Minimal API to interact with IMDB to fetch results",
     });
-
-    //opt.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
 });
 
 
@@ -27,10 +30,23 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
-app.MapGet("/", async (IHttpClientFactory httpClientFactory) =>
+app.MapGet("/movies/{expression}", async (string expression, IHttpClientFactory httpClientFactory) =>
 {
-    var apiLib = new ApiLib("k_pyej54z4");
-    var data = await apiLib.SearchMovieAsync("inception 2010");
+    var client = httpClientFactory.CreateClient("tmdb");
+
+    var res = await client.GetAsync($"?query={expression}");
+    var asdf = await res.Content.ReadAsStringAsync();
+    
+});
+
+app.MapPost("/user/{userId:int}/add-watchlist", async () =>
+{
 });
 app.Run();
+
+public class ApiOptions
+{
+    public string Name { get; set; }
+    public string ApiKey { get; set; }
+    public string BaseUrl { get; set; }
+}
