@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Movies.Domain.Entities
+﻿namespace Movies.Domain.Entities
 {
     public class Movie : BaseEntity
     {
@@ -12,6 +6,10 @@ namespace Movies.Domain.Entities
 
         public string Overview { get; set; }
 
-        public bool IsWatched { get; set; } 
+        public bool IsWatched { get; set; }
+
+        public WatchList WatchList { get; set; }
+
+        public int WatchListId { get; set; }
     }
 }

@@ -13,11 +13,11 @@ namespace Movies.Infrastructure.Repositories
         }
 
 
-        public void AddBulk(List<Movie> movies)
+        public async Task AddBulkAsync(List<Movie> movies)
         {
-            _db.Movies.AddRange(movies);
+            await _db.Movies.AddRangeAsync(movies);
 
-            _db.SaveChanges(
+            await _db.SaveChangesAsync();
         }
     }
 }

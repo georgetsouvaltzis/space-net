@@ -1,9 +1,3 @@
 ﻿namespace Movies.Application.Results;
 
-public class WatchlistMovieResult
-{
-    public int Id { get; set; }
-    public string Overview { get; set; }
-    public string Title { get; set; }
-    public bool IsWatched { get; set; }
-}
+public record class WatchlistMovieResult(int Id, string Overview, string Title, bool IsWatched);

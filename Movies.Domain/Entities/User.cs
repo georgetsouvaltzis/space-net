@@ -7,5 +7,7 @@
         public string LastName { get; set; }
 
         public WatchList WatchList { get; set; }
+
+        public int WatchListId { get; set; }
     }
 }

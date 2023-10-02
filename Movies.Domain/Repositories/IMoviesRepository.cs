@@ -1,9 +1,8 @@
 ﻿using Movies.Domain.Entities;
 
-namespace Movies.Domain.Repositories
+namespace Movies.Domain.Repositories;
+
+public interface IMoviesRepository
 {
-    public interface IMoviesRepository
-    {
-        void AddBulk(List<Movie> movies);
-    }
+    Task AddBulkAsync(List<Movie> movies);
 }

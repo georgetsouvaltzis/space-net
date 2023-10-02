@@ -13,10 +13,14 @@ namespace Movies.Infrastructure.Repositories
             _dbContext = moviesDbContext;
         }
 
-
         public async Task AddToWatchlistAsync(int userId, int movieId)
         {
-            var user = _dbContext.Users.First(x => x.Id == userId);
+            
+            var user = await _dbContext
+                .Users
+                .Include(x => x.WatchList)
+                .ThenInclude(x => x.Movies)
+                .FirstAsync(x => x.Id == userId);
 
             user.WatchList.Movies.Add(new Movie { Id = movieId });
 
@@ -28,7 +32,6 @@ namespace Movies.Infrastructure.Repositories
             var user = await _dbContext.Users
                 .Include(x => x.WatchList)
                 .ThenInclude(x => x.Movies)
-                .AsNoTracking()
                 .FirstAsync(x => x.Id == userId);
 
             return user.WatchList.Movies;
@@ -45,6 +48,7 @@ namespace Movies.Infrastructure.Repositories
             movie.IsWatched = true;
 
             await _dbContext.SaveChangesAsync();
+
         }
     }
 }

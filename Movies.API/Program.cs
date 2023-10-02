@@ -1,48 +1,13 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Movies.API.Extensions;
 using Movies.API.Requests;
+using Movies.API.Responses;
 using Movies.Application.Commands;
-using Movies.Application.Handlers;
 using Movies.Application.Queries;
-using Movies.Domain.Repositories;
-using Movies.Infrastructure.ApiClient;
-using Movies.Infrastructure.Db;
-using Movies.Infrastructure.Handlers.Queries;
-using Movies.Infrastructure.Repositories;
 using Movies.Infrastructure.Seeder;
-using Movies.Infrastructure.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
-var apiOptions = new ApiSettings();
-builder.Configuration.GetSection("ApiSettings").Bind(apiOptions);
-builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection(ApiSettings.KeyName));
-
-builder.Services.AddDbContext<MoviesDbContext>(opt => opt.UseInMemoryDatabase("MoviesDb"));
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddMediatR(typeof(AddMovieToUserWatchlistCommandHandler).Assembly, typeof(GetMoviesQueryHandler).Assembly);
-builder.Services.AddSingleton<ITmdbApiClient, TmdbApiClient>();
-builder.Services.AddScoped<IMoviesRepository, MoviesRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-builder.Services.AddHttpClient(apiOptions.Name,opt =>
-{
-    opt.BaseAddress = new Uri(apiOptions.BaseUrl);
-    opt.DefaultRequestHeaders.Clear();
-    opt.DefaultRequestHeaders.Add("Accept", "application/json");
-    opt.DefaultRequestHeaders.Add("Authorization", apiOptions.ApiKey);
-});
-
-builder.Services.AddSwaggerGen(opt =>
-{
-    opt.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "SpaceNet API",
-        Version = "V1",
-        Description = "Simple Minimal API to interact with IMDB to fetch results",
-    });
-});
-
+ServiceCollectionConfigurator.Configure(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 await DatabaseInitializer.InitializeAsync(app.Services);
@@ -60,33 +25,34 @@ app.MapGet("/movies/{expression}", async (string expression, IMediator mediator)
 
 app.MapPost("/user/{userId:int}/watchlist", async (int userId, AddMovieToUserWatchlistRequest request, IMediator mediator) =>
 {
-    var command = new AddMovieToUserWatchlistCommand
-    {
-        UserId = userId,
-        MovieId = request.MovieId
-    };
+    var command = new AddMovieToUserWatchlistCommand(userId, request.MovieId);
 
     var result = await mediator.Send(command);
-    return Results.Ok();
+    return Results.Ok(); // Ideally we would like to have Results.CreatedAt(....)
 });
 
 app.MapGet("/user/{userId:int}/watchlist", async (int userId, IMediator mediator) =>
 {
-    var command = new GetUserWatchlistMoviesQuery
+    var command = new GetUserWatchlistMoviesQuery(userId);
+
+    var result = await mediator.Send(command);
+
+    return Results.Ok(result.Select(x => new UserWatchlistMoviesResponse
     {
-        UserId = userId,
-    };
+        Id = x.Id,
+        Overview = x.Overview,
+        Title = x.Title,
+        IsWatched = x.IsWatched
+    }));
 });
 
 app.MapPut("/user/{userId:int}/watchlist", async (int userId, UpdateMovieWatchedRequest request, IMediator mediator) =>
 {
-    var command = new UpdateMovieWatchedCommand
-    {
-        UserId = userId,
-        MovieId = request.MovieId
-    };
+    var command = new UpdateMovieWatchedCommand(userId, request.MovieId);
+
     var result = await mediator.Send(command);
     return Results.Ok();
-    
+
 });
+
 app.Run();

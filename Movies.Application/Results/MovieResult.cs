@@ -1,10 +1,3 @@
-﻿namespace Movies.Application.Results
-{
-    public class MovieResult
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
+﻿namespace Movies.Application.Results;
 
-        public string Overview { get; set; }
-    }
-}
+public record class MovieResult(int Id, string Title, string Overview);

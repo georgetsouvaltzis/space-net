@@ -1,25 +1,20 @@
 ﻿using MediatR;
 using Movies.Application.Commands;
 using Movies.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Movies.Application.Handlers
+namespace Movies.Application.Handlers;
+
+public class UpdateMovieWatchedCommandHandler : IRequestHandler<UpdateMovieWatchedCommand>
 {
-    public class UpdateMovieWatchedCommandHandler : IRequestHandler<UpdateMovieWatchedCommand>
+    private readonly IUserRepository _userRepository;
+    public UpdateMovieWatchedCommandHandler(IUserRepository userRepository)
     {
-        private readonly IUserRepository _userRepository;
-        public UpdateMovieWatchedCommandHandler(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
-        public Task<Unit> Handle(UpdateMovieWatchedCommand request, CancellationToken cancellationToken)
-        {
-            _userRepository.
-            throw new NotImplementedException();
-        }
+        _userRepository = userRepository;
+    }
+    public async Task<Unit> Handle(UpdateMovieWatchedCommand request, CancellationToken cancellationToken)
+    {
+        await _userRepository.UpdateWatchlistMovieToWatched(request.UserId, request.MovieId);
+
+        return Unit.Value;
     }
 }
