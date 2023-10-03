@@ -24,7 +24,7 @@ public class MoviesRepository : IMoviesRepository
 
     public async Task<Movie> GetAsync(int movieId)
     {
-        return await _db.Movies.FirstOrDefaultAsync(x => x.Id == movieId);
+        return await _db.Movies.FirstAsync(x => x.Id == movieId);
     }
 
     public async Task UpdateAsync(Movie movie)
