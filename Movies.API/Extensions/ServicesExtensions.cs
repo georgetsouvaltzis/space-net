@@ -16,14 +16,16 @@ public static class ServiceCollectionConfigurator
     public static void Configure(IServiceCollection serviceCollection, IConfiguration configuration)
     {
         var apiOptions = new ApiSettings();
-        configuration.GetSection("ApiSettings").Bind(apiOptions);
+        configuration.GetSection(ApiSettings.KeyName).Bind(apiOptions);
         serviceCollection.Configure<ApiSettings>(configuration.GetSection(ApiSettings.KeyName));
         serviceCollection.AddDbContext<MoviesDbContext>(opt => opt.UseInMemoryDatabase(configuration["DbName"]));
         serviceCollection.AddEndpointsApiExplorer();
         serviceCollection.AddMediatR(typeof(AddMovieToUserWatchlistCommandHandler).Assembly, typeof(GetMoviesQueryHandler).Assembly);
+
         serviceCollection.AddSingleton<ITmdbApiClient, TmdbApiClient>();
         serviceCollection.AddScoped<IMoviesRepository, MoviesRepository>();
         serviceCollection.AddScoped<IUserRepository, UserRepository>();
+
         serviceCollection.AddHttpClient(apiOptions.Name, opt =>
                     {
                         opt.BaseAddress = new Uri(apiOptions.BaseUrl);
