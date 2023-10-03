@@ -8,9 +8,14 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Movies.API.Extensions;
 
+/// <summary>
+/// Extension is responsible for mapping Routes.
+/// </summary>
 public static class EndpointRouteBuilderExtensions
 {
-    private const int InvalidId = 0;
+    /// <summary>
+    /// Maps Movies endpoint to hosted <see cref="WebApplication"/>.
+    /// </summary>
     public static void MapMoviesEndpoints(this WebApplication app)
     {
         app.MapGet("/movies/{expression}", async (string expression, IMediator mediator) =>
@@ -37,6 +42,9 @@ public static class EndpointRouteBuilderExtensions
             .WithMetadata(new SwaggerOperationAttribute("Fetch results from TMDB API", "Adds results in inmemory db after fetching the results for future operations."));
     }
 
+    /// <summary>
+    /// Maps User endpoint to hosted <see cref="WebApplication"/>.
+    /// </summary>
     public static void MapUserWatchlistEndpoints(this WebApplication app)
     {
         app.MapPost("/user/{userId:int}/watchlist",

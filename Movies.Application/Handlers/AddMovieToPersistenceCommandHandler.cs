@@ -12,6 +12,7 @@ public class AddMovieToPersistenceCommandHandler : IRequestHandler<AddMovieToPer
     {
         _moviesRepository = moviesRepository;
     }
+    
     public async Task<Unit> Handle(AddMovieToPersistenceCommand request, CancellationToken cancellationToken)
     {
         await _moviesRepository.AddBulkAsync(request.MovieResults.Select(x => new Movie

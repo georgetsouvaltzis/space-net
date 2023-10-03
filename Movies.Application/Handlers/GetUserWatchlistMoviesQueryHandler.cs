@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Movies.Application.Queries;
 using Movies.Application.Results;
 using Movies.Domain.Repositories;

@@ -14,8 +14,14 @@ using Movies.Infrastructure.Settings;
 
 namespace Movies.API.Extensions;
 
+/// <summary>
+/// Extension is responsible for configuring DI.
+/// </summary>
 public static class ServiceCollectionConfigurator
 {
+    /// <summary>
+    /// Use this method to add additional DI configurations.
+    /// </summary>
     public static void Configure(IServiceCollection serviceCollection, IConfiguration configuration)
     {
         var apiOptions = new ApiSettings();

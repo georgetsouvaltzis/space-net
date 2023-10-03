@@ -1,7 +1,6 @@
-﻿namespace Movies.API.Requests
+﻿namespace Movies.API.Requests;
+
+public class UpdateMovieWatchedRequest
 {
-    public class UpdateMovieWatchedRequest
-    {
-        public int MovieId { get; set; }
-    }
+    public int MovieId { get; set; }
 }

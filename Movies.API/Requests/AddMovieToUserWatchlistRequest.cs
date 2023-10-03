@@ -1,7 +1,6 @@
-﻿namespace Movies.API.Requests
+﻿namespace Movies.API.Requests;
+
+public class AddMovieToUserWatchlistRequest
 {
-    public class AddMovieToUserWatchlistRequest
-    {
-        public int MovieId { get; set; }
-    }
+    public int MovieId { get; set; }
 }

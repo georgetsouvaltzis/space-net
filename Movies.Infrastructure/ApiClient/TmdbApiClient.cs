@@ -3,29 +3,28 @@ using Movies.Infrastructure.DTOs;
 using Movies.Infrastructure.Settings;
 using System.Net.Http.Json;
 
-namespace Movies.Infrastructure.ApiClient
+namespace Movies.Infrastructure.ApiClient;
+
+public interface ITmdbApiClient
 {
-    public interface ITmdbApiClient
+    Task<IEnumerable<MovieDTO>> GetMoviesAsync(string expression);
+}
+
+public class TmdbApiClient : ITmdbApiClient
+{
+    private readonly HttpClient _httpClient;
+    private readonly string QueryPrefix = "?query=";
+
+    public TmdbApiClient(IHttpClientFactory httpClientFactory, IOptions<ApiSettings> settings )
     {
-        Task<IEnumerable<MovieDTO>> GetMoviesAsync(string expression);
+        _httpClient = httpClientFactory.CreateClient(settings.Value.Name);
     }
 
-    public class TmdbApiClient : ITmdbApiClient
+    public async Task<IEnumerable<MovieDTO>> GetMoviesAsync(string expression)
     {
-        private readonly HttpClient _httpClient;
-        private readonly string QueryPrefix = "?query=";
+        if (string.IsNullOrEmpty(expression)) throw new ArgumentNullException(expression);
 
-        public TmdbApiClient(IHttpClientFactory httpClientFactory, IOptions<ApiSettings> settings )
-        {
-            _httpClient = httpClientFactory.CreateClient(settings.Value.Name);
-        }
-
-        public async Task<IEnumerable<MovieDTO>> GetMoviesAsync(string expression)
-        {
-            if (string.IsNullOrEmpty(expression)) throw new ArgumentNullException(expression);
-
-            var result = await _httpClient.GetFromJsonAsync<WrapperDTO>($"{QueryPrefix}{expression}");
-            return result.Movies;
-        }
+        var result = await _httpClient.GetFromJsonAsync<WrapperDTO>($"{QueryPrefix}{expression}");
+        return result.Movies;
     }
 }
